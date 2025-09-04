@@ -11,6 +11,7 @@ class USpringArmComponent;
 class USInteractionComponent;
 class UAnimMontage;
 class USAttributeComponent;
+class UParticleSystem;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
@@ -19,24 +20,35 @@ class ACTIONROGUELIKE_API ASCharacter : public ACharacter
 
 protected:
 
+	/* VisibleAnyWhere = read-only, still useful to view in-editor and enforce a convention.*/
+	UPROPERTY(VisibleAnywhere, Category = "Effects")
+	FName TimeToHitParamName;
+
+	UPROPERTY(VisibleAnywhere, Category = "Effects")
+	FName HandSocketName;
+
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
-	UAnimMontage* AttackAnim;
-
-	UPROPERTY(EditAnywhere, Category="Attack")
 	TSubclassOf<AActor> BlackHoleProjectileSpawnClass;
 
 	UPROPERTY(EditAnywhere, Category="Attack")
 	TSubclassOf<AActor> DashProjectileClass;
 
-	UPROPERTY(EditAnywhere, Category="Attack")
-	float AttackAnimDelay;
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	UAnimMontage* AttackAnim;
+
+	/* Particle System played during attack animation */
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	UParticleSystem* CastingEffect;
 
 	FTimerHandle TimerHandle_PrimaryAttack;
 	FTimerHandle TimerHandle_BlackholeAttack;
 	FTimerHandle TimerHandle_Dash;
+
+	UPROPERTY(EditAnywhere, Category="Attack")
+	float AttackAnimDelay;
 
 public:
 	// Sets default values for this character's properties
@@ -66,6 +78,7 @@ protected:
 	void Dash_TimeElapsed();
 	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
 	void PrimaryInteract();
+	void StartAttackEffects();
 
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
