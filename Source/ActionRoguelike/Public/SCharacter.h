@@ -50,12 +50,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Attack")
 	float AttackAnimDelay;
 
-public:
-	// Sets default values for this character's properties
-	ASCharacter();
-
-protected:
-
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArmComp;
 
@@ -69,24 +63,38 @@ protected:
 	USAttributeComponent* AttributeComp;
 
 	void MoveForward(float Value);
+
 	void MoveRight(float Value);
+
 	void PrimaryAttack();
+
 	void PrimaryAttack_TimeElapsed();
+
 	void BlackHoleAttack();
+
 	void BlackholeAttack_TimeElapsed();
+
 	void Dash();
+
 	void Dash_TimeElapsed();
-	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
-	void PrimaryInteract();
+
 	void StartAttackEffects();
+
+	// Re-use spawn logic between attacks
+	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
+
+	void PrimaryInteract();
 
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
 
+	// void StartAttackEffects();
+
 	virtual void PostInitializeComponents() override;
 
-
-public:	
+public:
+	// Sets default values for this character's properties
+	ASCharacter();
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

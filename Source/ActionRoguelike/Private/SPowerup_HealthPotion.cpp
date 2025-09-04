@@ -19,26 +19,20 @@ ASPowerup_HealthPotion::ASPowerup_HealthPotion()
 
 void ASPowerup_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 {
-	UE_LOG(LogTemp, Log, TEXT("Interact_Implementation"));
 
 	if (!ensure(InstigatorPawn))
 	{
 		return;
-		UE_LOG(LogTemp, Log, TEXT("Return"));
 	}
 
 	USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(InstigatorPawn->GetComponentByClass(USAttributeComponent::StaticClass()));
 	// Check if not already at max health
 	if (ensure(AttributeComp) && !AttributeComp->IsFullHealth())
 	{
-
-		UE_LOG(LogTemp, Log, TEXT("IsFullHealth"));
-
 		// Only activate if healed successfully
 		if (AttributeComp->ApplyHealthChange(AttributeComp->GetHealthMax()))
 		{
 			HideAndCooldownPowerup();
-			UE_LOG(LogTemp, Log, TEXT("HideAndCooldownPowerup"));
 		}
 	}
 }
