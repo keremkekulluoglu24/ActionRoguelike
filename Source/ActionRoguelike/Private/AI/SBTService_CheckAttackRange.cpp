@@ -16,16 +16,16 @@ void USBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, u
 	// Check distance between ai pawn and target actor
 
 	UBlackboardComponent* BlackBoardComp = OwnerComp.GetBlackboardComponent();
-	if(ensure(BlackBoardComp))
+	if(BlackBoardComp)
 	{
 		AActor* TargetActor = Cast<AActor>(BlackBoardComp->GetValueAsObject("TargetActor"));
-		if (ensure(TargetActor))
+		if (TargetActor)
 		{
 			AAIController* MyController = OwnerComp.GetAIOwner();
-			if (ensure(MyController))
+			if (MyController)
 			{
 				APawn* AIPawn = MyController->GetPawn();
-				if (ensure(AIPawn))
+				if (AIPawn)
 				{
 					float DistanceTo = FVector::Distance(TargetActor->GetActorLocation(), AIPawn->GetActorLocation());
 
