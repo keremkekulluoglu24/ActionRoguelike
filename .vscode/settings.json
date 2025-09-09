@@ -1,0 +1,11 @@
+{
+	"files.exclude": {
+		"D:/GitHub/ActionRoguelike/.git": true,
+		"D:/GitHub/ActionRoguelike/.vs": true,
+		"D:/GitHub/ActionRoguelike/.vscode": true,
+		"D:/GitHub/ActionRoguelike/Content": true,
+		"D:/GitHub/ActionRoguelike/DerivedDataCache": true,
+		"D:/GitHub/ActionRoguelike/Intermediate": true,
+		"D:/GitHub/ActionRoguelike/Saved": true
+	}
+}
