@@ -2,6 +2,8 @@
 
 
 #include "SCharacter.h"
+
+#include "SActionComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -24,7 +26,9 @@ ASCharacter::ASCharacter()
 
 	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
 
-	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp"); 
+	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
+
+	ActionComp = CreateDefaultSubobject<USActionComponent>("ActionComp");
 	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
@@ -63,12 +67,15 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ASCharacter::Dash);
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ASCharacter::PrimaryInteract);
 
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this,  &ASCharacter::SprintStart);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this,  &ASCharacter::SprintStop);
+	
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASCharacter::Jump);
 }
 
-void ASCharacter::HealSelf(float Amount)
+void ASCharacter::HealSelf(float Amount  /* = 100 */)
 {
-	AttributeComp->ApplyHealthChange(this, Amount /* = 100 */);
+	AttributeComp->ApplyHealthChange(this, Amount);
 }
 
 void ASCharacter::MoveForward(float Value)
@@ -89,6 +96,16 @@ void ASCharacter::MoveRight(float Value)
 	FVector RightVector = FRotationMatrix(ControlRot).GetScaledAxis(EAxis::Y);
 
 	AddMovementInput(RightVector, Value);
+}
+
+void ASCharacter::SprintStart()
+{
+	ActionComp->StarActionByName(this, "Sprint");
+}
+
+void ASCharacter::SprintStop()
+{
+	ActionComp->StopActionByName(this, "Sprint");
 }
 
 void ASCharacter::PrimaryAttack() 
