@@ -48,7 +48,10 @@ void ASProjectileBase::Explode_Implementation()
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
 
+		// UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
 
+		// UGameplayStatics::PlayWorldCameraShake(this, ImpactVFX, ImpactShake, GetActorRotation(),ImpactShakeInnerRadius, ImpactShakeOuterRadius);
+		
 		Destroy();
 	}
 }
