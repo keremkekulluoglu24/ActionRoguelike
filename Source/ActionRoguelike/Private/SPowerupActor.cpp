@@ -8,9 +8,14 @@
 // Sets default values
 ASPowerupActor::ASPowerupActor()
 {
-	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
-	SphereComp->SetCollisionProfileName("Powerup");
+	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
+	SphereComp->SetSphereRadius(100.0f);
 	RootComponent = SphereComp;
+
+	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
+	// Disable collision, instead we use SphereComp to handle interaction queries
+	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	MeshComp->SetupAttachment(RootComponent);
 
 	RespawnTime = 10.0f;
 }
