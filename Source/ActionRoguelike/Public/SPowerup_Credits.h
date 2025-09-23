@@ -4,24 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "SPowerupActor.h"
-#include "SPowerup_HealthPotion.generated.h"
+#include "SPowerup_Credits.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ACTIONROGUELIKE_API ASPowerup_HealthPotion : public ASPowerupActor
+class ACTIONROGUELIKE_API ASPowerup_Credits : public ASPowerupActor
 {
 	GENERATED_BODY()
 
 protected:
 
-	UPROPERTY(EditAnywhere, Category = "HealthPotion")
-	float CreditCost;
+	UPROPERTY(EditAnywhere, Category = "Powerup")
+	int32 CreditsAmount;
 
 public:
 	
-	ASPowerup_HealthPotion();
-
 	void Interact_Implementation(APawn* InstigatorPawn) override;
+
+	ASPowerup_Credits();
 };
