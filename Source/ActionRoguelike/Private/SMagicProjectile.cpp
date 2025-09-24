@@ -2,11 +2,11 @@
 
 
 #include "SMagicProjectile.h"
-
 #include "SActionComponent.h"
 #include "Components/SphereComponent.h"
 #include "SGameplayFunctionLibrary.h"	
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "SActionEffect.h"
 
 // Sets default values
 ASMagicProjectile::ASMagicProjectile()
@@ -29,10 +29,16 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 			SetInstigator(Cast<APawn>(OtherActor));
 			return;
 		}
-		
+
+		// Apply Damage & Impulse
 		if (USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, DamageAmount, SweepResult))
 		{
 			Explode();
+
+			if (ActionComp)
+			{
+				ActionComp->AddAction(GetOwner(), BurningActionClass);
+			}
 		}
 	}
 }
