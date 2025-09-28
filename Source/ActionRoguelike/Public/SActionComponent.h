@@ -25,6 +25,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	void RemoveAction(USAction* ActionToRemove);
+
+	/* Returns first occurrence of action matching the class provided */
+	UFUNCTION(BlueprintCallable, Category = "Actions")
+	USAction* GetAction(TSubclassOf<USAction> ActionClass) const;
 	
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	bool StarActionByName(AActor* Instigator, FName ActionName);
@@ -35,6 +39,9 @@ public:
 	USActionComponent();
 
 protected:
+
+	UFUNCTION(Server, Reliable)
+	void ServerStartAction(AActor* Instigator, FName ActionName);
 
 	/* Granted abilities at game start */
 	UPROPERTY(EditAnywhere, Category = "Actions")

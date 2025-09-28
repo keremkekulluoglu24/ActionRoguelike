@@ -10,8 +10,8 @@ USActionComponent::USActionComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 
+	SetIsReplicatedByDefault(true);
 }
-
 
 void USActionComponent::BeginPlay()
 {
@@ -59,6 +59,19 @@ void USActionComponent::RemoveAction(USAction* ActionToRemove)
 	Actions.Remove(ActionToRemove);
 }
 
+USAction* USActionComponent::GetAction(TSubclassOf<USAction> ActionClass) const
+{
+	for (USAction* Action : Actions)
+	{
+		if (Action->IsA(ActionClass))
+		{
+			return Action;
+		}
+	}
+
+	return nullptr;
+}
+
 bool USActionComponent::StarActionByName(AActor* Instigator, FName ActionName)
 {
 	for (USAction* Action : Actions)
@@ -72,6 +85,11 @@ bool USActionComponent::StarActionByName(AActor* Instigator, FName ActionName)
 				continue;
 			}
 
+			// Is Client?
+			if (!GetOwner()->HasAuthority())
+			{
+				ServerStartAction(Instigator, ActionName);
+			}
 			
 			Action->StartAction(Instigator);
 			return true;
@@ -94,4 +112,9 @@ bool USActionComponent::StopActionByName(AActor* Instigator, FName ActionName)
 		}
 	}
 	return false;
+}
+
+void USActionComponent::ServerStartAction_Implementation(AActor* Instigator, FName ActionName)
+{
+	StarActionByName(Instigator, ActionName);
 }

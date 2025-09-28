@@ -19,6 +19,10 @@ class ACTIONROGUELIKE_API ASAICharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
+	
+	UFUNCTION(BlueprintCallable, Category = "AI")
+	AActor* GetTargetActor() const;
+	
 	ASAICharacter();
 
 protected:
@@ -28,8 +32,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> HealthBarWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> SpottedWidgetClass;
+
 	UPROPERTY(VisibleAnywhere, Category = "Effects")
 	FName TimeToHitParamName;
+
+	UPROPERTY(VisibleAnywhere, Category = "AI")
+	FName TargetActorKey;
 
 	void SetTargetActor(AActor* NewTarget);
 
