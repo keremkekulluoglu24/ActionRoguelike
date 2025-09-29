@@ -16,10 +16,10 @@ USAttributeComponent::USAttributeComponent()
 	Health = 100;
 	Health = HealthMax;
 
+	RageMax = 100;
+
 	SetIsReplicatedByDefault(true);
 }
-
-
 
 bool USAttributeComponent::Kill(AActor* InstigatorActor)
 {
@@ -48,48 +48,29 @@ float USAttributeComponent::GetHealthMax() const
 
 float USAttributeComponent::GetRage() const
 {
-	return  Rage;
+	return Rage;
 }
 
 bool USAttributeComponent::ApplyRage(AActor* InstigatorActor, float Delta)
 {
-	if (!GetOwner()->CanBeDamaged() && Delta < 0.0f)
+	if (Delta == 0.0f)
 	{
 		return false;
-	}
-
-	if (Delta < 0.0f)
-	{
-		float DamageMultiplier = CVarDamageMultiplier.GetValueOnGameThread();
-
-		Delta *= DamageMultiplier;
 	}
 
 	float OldRage = Rage;
 
 	Rage = FMath::Clamp(Rage + Delta, 0.0f, RageMax);
 
-	float ActualDelta = Rage + OldRage;
-	// OnRageChanged.Broadcast(InstigatorActor, this, Rage, ActualDelta);
+	float ActualDelta = Rage - OldRage;
+
 	if (ActualDelta != 0.0f)
 	{
-		MulticastHealthChanged(InstigatorActor, Rage, ActualDelta);	
+		OnRageChanged.Broadcast(InstigatorActor, this, Rage, ActualDelta);
 	}
 
-	// Died
-	if (ActualDelta < 0.0f && Health == 0.0f)
-	{
-		ASGameModeBase* GM = GetWorld()->GetAuthGameMode<ASGameModeBase>();
-		if (GM)
-		{
-			GM->OnActorKilled(GetOwner(), InstigatorActor);
-		}
-	}
-
-	return ActualDelta != 0;
+	return ActualDelta != 0.0f;
 }
-
-
 
 bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
 {
@@ -108,12 +89,19 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 	float OldHealth = Health;
 
 	Health = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
-
+	
 	float ActualDelta = Health - OldHealth;
+	
 	// OnHealthChanged.Broadcast(InstigatorActor, this, Health, ActualDelta);
 	if (ActualDelta != 0.0f)
 	{
-		MulticastHealthChanged(InstigatorActor, Health, ActualDelta);	
+		MulticastHealthChanged(InstigatorActor, Health, ActualDelta);
+
+		if (ActualDelta < 0.0f) 
+		{
+			float RageGain = -ActualDelta;
+			ApplyRage(InstigatorActor, RageGain);
+		}
 	}
 
 	// Died
